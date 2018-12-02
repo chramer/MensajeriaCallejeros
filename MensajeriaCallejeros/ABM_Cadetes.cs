@@ -30,6 +30,7 @@ namespace MensajeriaCallejeros
 
         private void ABM_Cadetes_Load(object sender, EventArgs e)
         {
+            textBox4.Enabled = false;
             //
             // Cargo los datos del combobox
             //
@@ -48,11 +49,52 @@ namespace MensajeriaCallejeros
             {
                 button4.Visible = false;
                 checkBox1.Checked = true;
+                setea_numMovil();
             }
             else {
                 button3.Visible = false;
                 traer_datos();
             }
+        }
+
+        private void setea_numMovil()
+        {
+            decimal nummovil = 0;
+            conexion.ConnectionString = Convert.ToString(Conexion_BD.Recuperar_cadena());
+            //Recupera Max ID cliente
+            try
+            {
+                conexion.Open();
+                sentencia = "select max(nummov_cadet) from tb_cadetes";
+                FbCommand cmd = new FbCommand(sentencia, conexion);
+                FbDataReader fb_datareader = cmd.ExecuteReader();
+                DataTable dt = new DataTable();
+                dt.Load(fb_datareader);
+                cmd = null;
+
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    if (row[0] == DBNull.Value)
+                    {
+                        nummovil = 0;
+                    }
+                    else
+                    {
+                        nummovil = Convert.ToDecimal(row[0]);
+                    }
+                }
+
+                nummovil = nummovil + 1;
+                dt.Rows.Clear();
+                conexion.Close();
+            }
+            catch (Exception er)
+            {
+                MessageBox.Show(er.Message.ToString(), "Error");
+            }
+
+            textBox4.Text = Convert.ToString(nummovil);
         }
 
         private void traer_datos()
@@ -317,6 +359,11 @@ namespace MensajeriaCallejeros
             {
                 MessageBox.Show(er.Message.ToString(), "Error");
             }
+        }
+
+        private void textBox4_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
