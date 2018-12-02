@@ -163,6 +163,12 @@
     <Compile Include="Admin_Localidades.Designer.cs">
       <DependentUpon>Admin_Localidades.cs</DependentUpon>
     </Compile>
+    <Compile Include="Bloqueo_Cadete.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Bloqueo_Cadete.Designer.cs">
+      <DependentUpon>Bloqueo_Cadete.cs</DependentUpon>
+    </Compile>
     <Compile Include="Conexion_BD.cs" />
     <Compile Include="DataHelper.cs" />
     <Compile Include="Form1.cs">
@@ -199,6 +205,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Admin_Localidades.resx">
       <DependentUpon>Admin_Localidades.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Bloqueo_Cadete.resx">
+      <DependentUpon>Bloqueo_Cadete.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
