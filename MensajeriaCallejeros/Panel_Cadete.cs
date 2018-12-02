@@ -360,5 +360,26 @@ namespace MensajeriaCallejeros
             bloc.nombre = nombre;
             bloc.ShowDialog();
         }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            Decimal id = 0;
+            String nombre;
+            DataGridViewRow row = new DataGridViewRow();
+            row = dataGridView1.CurrentRow;
+
+            if (row == null)
+            {
+                return;
+            }
+
+            id = Convert.ToDecimal(row.Cells["Id"].Value);
+
+            nombre = Convert.ToString(row.Cells["Nombre Cadete"].Value);
+            PagoCadetes pg = new PagoCadetes();
+            pg.id = id;
+            pg.nombre = nombre;
+            pg.ShowDialog();
+        }
     }
 }

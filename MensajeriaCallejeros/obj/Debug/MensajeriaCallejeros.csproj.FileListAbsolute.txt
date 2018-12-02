@@ -280,3 +280,4 @@ C:\Users\Nicoa\Desktop\MensajeriaCallejeros\MensajeriaCallejeros\obj\Debug\Mensa
 C:\Users\Nicoa\Desktop\MensajeriaCallejeros\MensajeriaCallejeros\obj\Debug\MensajeriaCallejeros.exe
 C:\Users\Nicoa\Desktop\MensajeriaCallejeros\MensajeriaCallejeros\obj\Debug\MensajeriaCallejeros.pdb
 C:\Users\Nicoa\Desktop\MensajeriaCallejeros\MensajeriaCallejeros\obj\Debug\MensajeriaCallejeros.Bloqueo_Cadete.resources
+C:\Users\Nicoa\Desktop\MensajeriaCallejeros\MensajeriaCallejeros\obj\Debug\MensajeriaCallejeros.PagoCadetes.resources

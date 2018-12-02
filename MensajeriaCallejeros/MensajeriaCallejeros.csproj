@@ -170,12 +170,24 @@
       <DependentUpon>Bloqueo_Cadete.cs</DependentUpon>
     </Compile>
     <Compile Include="Conexion_BD.cs" />
+    <Compile Include="Config_PCadetes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Config_PCadetes.Designer.cs">
+      <DependentUpon>Config_PCadetes.cs</DependentUpon>
+    </Compile>
     <Compile Include="DataHelper.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PagoCadetes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PagoCadetes.Designer.cs">
+      <DependentUpon>PagoCadetes.cs</DependentUpon>
     </Compile>
     <Compile Include="Panel_Cadete.cs">
       <SubType>Form</SubType>
@@ -209,8 +221,14 @@
     <EmbeddedResource Include="Bloqueo_Cadete.resx">
       <DependentUpon>Bloqueo_Cadete.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Config_PCadetes.resx">
+      <DependentUpon>Config_PCadetes.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PagoCadetes.resx">
+      <DependentUpon>PagoCadetes.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Panel_Cadete.resx">
       <DependentUpon>Panel_Cadete.cs</DependentUpon>

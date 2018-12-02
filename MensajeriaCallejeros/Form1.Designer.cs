@@ -33,13 +33,16 @@
             this.administraciónDeClientesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.administraciónDeCadetesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.button1 = new System.Windows.Forms.Button();
+            this.configuraciónToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pagoCadetesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.administraciónToolStripMenuItem});
+            this.administraciónToolStripMenuItem,
+            this.configuraciónToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(781, 24);
@@ -58,14 +61,14 @@
             // administraciónDeClientesToolStripMenuItem
             // 
             this.administraciónDeClientesToolStripMenuItem.Name = "administraciónDeClientesToolStripMenuItem";
-            this.administraciónDeClientesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.administraciónDeClientesToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.administraciónDeClientesToolStripMenuItem.Text = "Clientes";
             this.administraciónDeClientesToolStripMenuItem.Click += new System.EventHandler(this.administraciónDeClientesToolStripMenuItem_Click);
             // 
             // administraciónDeCadetesToolStripMenuItem
             // 
             this.administraciónDeCadetesToolStripMenuItem.Name = "administraciónDeCadetesToolStripMenuItem";
-            this.administraciónDeCadetesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.administraciónDeCadetesToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.administraciónDeCadetesToolStripMenuItem.Text = "Cadetes";
             this.administraciónDeCadetesToolStripMenuItem.Click += new System.EventHandler(this.administraciónDeCadetesToolStripMenuItem_Click);
             // 
@@ -78,6 +81,20 @@
             this.button1.Text = "Salir";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // configuraciónToolStripMenuItem
+            // 
+            this.configuraciónToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.pagoCadetesToolStripMenuItem});
+            this.configuraciónToolStripMenuItem.Name = "configuraciónToolStripMenuItem";
+            this.configuraciónToolStripMenuItem.Size = new System.Drawing.Size(95, 20);
+            this.configuraciónToolStripMenuItem.Text = "Configuración";
+            // 
+            // pagoCadetesToolStripMenuItem
+            // 
+            this.pagoCadetesToolStripMenuItem.Name = "pagoCadetesToolStripMenuItem";
+            this.pagoCadetesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.pagoCadetesToolStripMenuItem.Text = "Pago Cadetes";
             // 
             // Form1
             // 
@@ -104,6 +121,8 @@
         private System.Windows.Forms.ToolStripMenuItem administraciónDeClientesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem administraciónDeCadetesToolStripMenuItem;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ToolStripMenuItem configuraciónToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem pagoCadetesToolStripMenuItem;
     }
 }
 
