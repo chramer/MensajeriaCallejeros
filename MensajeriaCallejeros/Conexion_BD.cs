@@ -15,6 +15,7 @@ namespace MensajeriaCallejeros
         public static FbConnectionStringBuilder Recuperar_cadena()
         {
             FbConnectionStringBuilder fb_conexion = new FbConnectionStringBuilder();
+            //
             // Assume failure.
             //fb_conexion.ServerType = FbServerType.Default;
             //fb_conexion.UserID = "sysdba";
