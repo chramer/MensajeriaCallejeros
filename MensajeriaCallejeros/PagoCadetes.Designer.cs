@@ -36,17 +36,17 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.button2 = new System.Windows.Forms.Button();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.textBox4 = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.button2 = new System.Windows.Forms.Button();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -130,68 +130,23 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Pago";
             // 
-            // button2
+            // label8
             // 
-            this.button2.Location = new System.Drawing.Point(79, 441);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(128, 23);
-            this.button2.TabIndex = 8;
-            this.button2.Text = "Realizar Operación";
-            this.button2.UseVisualStyleBackColor = true;
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(6, 110);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(86, 13);
+            this.label8.TabIndex = 15;
+            this.label8.Text = "Cuenta Corriente";
             // 
-            // checkBox1
+            // textBox4
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(76, 231);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(107, 17);
-            this.checkBox1.TabIndex = 0;
-            this.checkBox1.Text = "Compensar Pago";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(6, 175);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(250, 50);
-            this.textBox1.TabIndex = 2;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(6, 159);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(60, 13);
-            this.label5.TabIndex = 9;
-            this.label5.Text = "Comentario";
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Location = new System.Drawing.Point(295, 12);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(292, 423);
-            this.groupBox2.TabIndex = 9;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Información Complementaria";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(6, 23);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(46, 13);
-            this.label6.TabIndex = 11;
-            this.label6.Text = "Efectivo";
-            // 
-            // textBox2
-            // 
-            this.textBox2.Location = new System.Drawing.Point(6, 39);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(250, 20);
-            this.textBox2.TabIndex = 10;
-            this.textBox2.Text = "0";
-            this.textBox2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.textBox4.Location = new System.Drawing.Point(6, 126);
+            this.textBox4.Name = "textBox4";
+            this.textBox4.Size = new System.Drawing.Size(250, 20);
+            this.textBox4.TabIndex = 14;
+            this.textBox4.Text = "0";
+            this.textBox4.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label7
             // 
@@ -211,23 +166,69 @@
             this.textBox3.Text = "0";
             this.textBox3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // label8
+            // label6
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(6, 110);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(86, 13);
-            this.label8.TabIndex = 15;
-            this.label8.Text = "Cuenta Corriente";
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(6, 23);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(46, 13);
+            this.label6.TabIndex = 11;
+            this.label6.Text = "Efectivo";
             // 
-            // textBox4
+            // textBox2
             // 
-            this.textBox4.Location = new System.Drawing.Point(6, 126);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(250, 20);
-            this.textBox4.TabIndex = 14;
-            this.textBox4.Text = "0";
-            this.textBox4.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.textBox2.Location = new System.Drawing.Point(6, 39);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(250, 20);
+            this.textBox2.TabIndex = 10;
+            this.textBox2.Text = "0";
+            this.textBox2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(6, 159);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(60, 13);
+            this.label5.TabIndex = 9;
+            this.label5.Text = "Comentario";
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(6, 175);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(250, 50);
+            this.textBox1.TabIndex = 2;
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(76, 231);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(107, 17);
+            this.checkBox1.TabIndex = 0;
+            this.checkBox1.Text = "Compensar Pago";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(79, 441);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(128, 23);
+            this.button2.TabIndex = 8;
+            this.button2.Text = "Realizar Operación";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Location = new System.Drawing.Point(295, 12);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(292, 423);
+            this.groupBox2.TabIndex = 9;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Información Complementaria";
             // 
             // PagoCadetes
             // 

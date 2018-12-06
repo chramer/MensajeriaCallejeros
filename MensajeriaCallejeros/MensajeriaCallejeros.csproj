@@ -177,6 +177,7 @@
       <DependentUpon>Config_PCadetes.cs</DependentUpon>
     </Compile>
     <Compile Include="DataHelper.cs" />
+    <Compile Include="DisparadorMovim.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>

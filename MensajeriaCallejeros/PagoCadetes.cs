@@ -27,40 +27,199 @@ namespace MensajeriaCallejeros
         private void PagoCadetes_Load(object sender, EventArgs e)
         {
             // Fecha seleccionada en el control DataTimePicker
-            DateTime fecha = dateTimePicker2.Value.Date;
-            DateTime fechaLunes = GetFirstDayOfWeek(fecha);
-            dateTimePicker2.Value = fechaLunes;
-
-            label2.Text = nombre;
+            conexion.ConnectionString = Convert.ToString(Conexion_BD.Recuperar_cadena());
+            //Recupera clientes
+            try
+            {
+                sentencia = "select count(*) from tb_cadete_pago where id_cadet = '" + id + "'";
+                conexion.Open();
+                FbCommand cmd = new FbCommand(sentencia, conexion);
+                FbDataReader fb_datareader = cmd.ExecuteReader();
+                DataTable dt = new DataTable();
+                dt.Load(fb_datareader);
+                conexion.Close();
+                foreach (DataRow row in dt.Rows)
+                {
+                    if (Convert.ToInt16(row[0]) == 0)
+                    {
+                        bandera = "PP";
+                    }
+                    else
+                    {
+                        bandera = "PN";
+                        sentencia = "select fecha_venc from tb_cadete_pago where id_cadet = '" + id + "'";
+                        conexion.Open();
+                        FbCommand cmd1 = new FbCommand(sentencia, conexion);
+                        FbDataReader fb_datareader1 = cmd1.ExecuteReader();
+                        DataTable dt1 = new DataTable();
+                        dt1.Load(fb_datareader1);
+                        conexion.Close();
+                        foreach (DataRow row1 in dt1.Rows)
+                        {
+                            DateTime fecha = Convert.ToDateTime(row1[0]);
+                            dateTimePicker2.Value = fecha.AddDays(7); ;
+                        }
+                    }
+                }
+                dt.Rows.Clear();
+                label2.Text = nombre;
+            }
+            catch (Exception er)
+            {
+                MessageBox.Show(er.Message.ToString(), "Error");
+            }
+            
         }
 
-        public DateTime GetFirstDayOfWeek(DateTime currentDate)
+        private void inserta_fila()
         {
+            decimal importe;
+            conexion.ConnectionString = Convert.ToString(Conexion_BD.Recuperar_cadena());
+            try
+            {
+                importe = 0;
 
-            // Referenciamos la cultura invariable.
-            // 
-            CultureInfo ci = CultureInfo.InvariantCulture;
+                if (textBox1.Text != "0")
+                {
+                    importe = Convert.ToDecimal(textBox2.Text);
+                }
 
-            // Obtenemos el día de la semana correspondiente a la fecha actual.
-            // 
-            DayOfWeek ds = ci.Calendar.GetDayOfWeek(currentDate);
+                if (textBox2.Text != "0")
+                {
+                    importe = Convert.ToDecimal(textBox3.Text);
+                }
 
-            // Como el primer día de la semana es el 0 (Domingo), construimos
-            // un array para conocer los días que hay que restar de la fecha.
-            // Así, si es Domingo (0) restaremos 6 días, si es Sábado (6)
-            // restaremos 5 días, y si es Lunes (1) restaremos 0 días.
-            // Recordar que en .NET los índices de los arrays están en base cero.
-            // 
-            int[] dias = new[] { -6, 0, 1, 2, 3, 4, 5 };
+                if (textBox3.Text != "0")
+                {
+                    importe = Convert.ToDecimal(textBox4.Text);
+                }
 
-            // De la fecha actual restamos los días correspondientes.
-            // 
-            return currentDate.Subtract(new TimeSpan(dias[Convert.ToInt16(ds)], 0, 0, 0));
+                conexion.Open();
+                sentencia = "insert into tb_cadete_pago (id_cadet,ultimo_pago,pago_actual,fecha_pago,fecha_venc,monto_tot) " +
+                    "values ('" + id + "',0,'" + importe + "','" + String.Format("{0:yyyy-MM-dd}", dateTimePicker1.Value)  + "','" + String.Format("{0:yyyy-MM-dd}", dateTimePicker2.Value) + "')";
+                FbCommand cmd = new FbCommand(sentencia, conexion);
+                cmd.ExecuteNonQuery();
+                cmd = null;
+                conexion.Close();
+            }
+            catch (Exception er)
+            {
+                MessageBox.Show(er.Message.ToString(), "Error");
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (bandera == "PP")
+            {
+                inserta_fila();
+                inserta_regpag();
+            }
+            else
+            {
+                actualiza_cadet_pag();
+                inserta_regpag();
+            }
+        }
+
+        private void actualiza_cadet_pag() {
+            decimal importe;
+            conexion.ConnectionString = Convert.ToString(Conexion_BD.Recuperar_cadena());
+            try
+            {
+                importe = 0;
+
+                if (textBox1.Text != "0")
+                {
+                    importe = Convert.ToDecimal(textBox2.Text);
+                }
+
+                if (textBox2.Text != "0")
+                {
+                    importe = Convert.ToDecimal(textBox3.Text);
+                }
+
+                if (textBox3.Text != "0")
+                {
+                    importe = Convert.ToDecimal(textBox4.Text);
+                }
+
+                conexion.Open();
+                sentencia = "update tb_cadete_pago " +
+                            "set ultimo_pago = pago_actual ," +
+                            "pago_actual = '" + importe + "' ," +
+                            "fecha_pago = '" + String.Format("{0:yyyy-MM-dd}", dateTimePicker1.Value) + "' ," +
+                            "fecha_venc = fecha_venc " +
+                            "where id_cadet = '" + id + "'";
+                FbCommand cmd = new FbCommand(sentencia, conexion);
+                cmd.ExecuteNonQuery();
+                cmd = null;
+                conexion.Close();
+            }
+            catch (Exception er)
+            {
+                MessageBox.Show(er.Message.ToString(), "Error");
+            }
+        }
+
+        private void inserta_regpag()
+        {
+            decimal id_reg;
+            id_reg = 0;
+            conexion.ConnectionString = Convert.ToString(Conexion_BD.Recuperar_cadena());
+            try
+            {
+                conexion.Open();
+                sentencia = "select max(id_reg_pg) from TB_CADET_REG_PAGO";
+                FbCommand cmd = new FbCommand(sentencia, conexion);
+                FbDataReader fb_datareader = cmd.ExecuteReader();
+                DataTable dt = new DataTable();
+                dt.Load(fb_datareader);
+                cmd = null;
+
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    if (row[0] == DBNull.Value)
+                    {
+                        id_reg = 0;
+                    }
+                    else
+                    {
+                        id_reg = Convert.ToDecimal(row[0]);
+                    }
+                }
+
+                id_reg = id_reg + 1;
+                dt.Rows.Clear();
+                conexion.Close();
+            }
+            catch (Exception er)
+            {
+                MessageBox.Show(er.Message.ToString(), "Error");
+            }
+            /*Logica de Inserción */
+
+
+            try
+            {
+                conexion.Open();
+                sentencia = "insert into TB_CADET_REG_PAGO (id_reg_pg,id_cadet,fecpago,fecven,fecreal,fecpro,importe,sdo_total,sdo_restante,tip_pago,compensado,comentario) " +
+                    "values ('" + id_reg + "','" + id + "',)";
+                FbCommand cmd = new FbCommand(sentencia, conexion);
+                cmd.ExecuteNonQuery();
+                cmd = null;
+                conexion.Close();
+            }
+            catch (Exception er)
+            {
+                MessageBox.Show(er.Message.ToString(), "Error");
+            }
         }
     }
 }
