@@ -302,12 +302,15 @@ namespace MensajeriaCallejeros
                 }
             }
 
+            string fecha = DateTime.Now.ToString("yyyy-MM-dd");
+            string tiempo = DateTime.Now.ToString("HH:mm:ss.ffff");
+            fecha = fecha + " " + tiempo;
             try
             {
                 conexion.Open();
                 sentencia = "insert into TB_CADET_REG_PAGO (id_reg_pg,id_cadet,fecpago,fecven,fecreal,fecpro,importe,sdo_total,sdo_restante,tip_pago,compensado,comentario) " +
                     "values ('" + id_reg + "','" + id + "','"+ String.Format("{0:yyyy-MM-dd}", dateTimePicker1.Value) + "','" + String.Format("{0:yyyy-MM-dd}", dateTimePicker2.Value) + "'," +
-                    "'" + String.Format("{0:yyyy-MM-dd hh:mm:ss.tttt}", DateTime.Today) + "','" + String.Format("{0:yyyy-MM-dd}", DateTime.Today) + "','" + importe + "','" + importe_cadete + "','" + resto + "','" + tip_pago + "','" + compensa + "','" + textBox1.Text + "')";
+                    "'" + fecha + "','" + String.Format("{0:yyyy-MM-dd}", DateTime.Today) + "','" + importe + "','" + importe_cadete + "','" + resto + "','" + tip_pago + "','" + compensa + "','" + textBox1.Text + "')";
                 FbCommand cmd = new FbCommand(sentencia, conexion);
                 cmd.ExecuteNonQuery();
                 cmd = null;
