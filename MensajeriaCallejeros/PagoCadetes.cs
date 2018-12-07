@@ -224,7 +224,8 @@ namespace MensajeriaCallejeros
 
         private void inserta_regpag()
         {
-            decimal id_reg;
+            decimal id_reg = 0;
+            decimal id_reg2 = 0;
             id_reg = 0;
             conexion.ConnectionString = Convert.ToString(Conexion_BD.Recuperar_cadena());
             try
@@ -236,8 +237,7 @@ namespace MensajeriaCallejeros
                 DataTable dt = new DataTable();
                 dt.Load(fb_datareader);
                 cmd = null;
-
-
+                conexion.Close();
                 foreach (DataRow row in dt.Rows)
                 {
                     if (row[0] == DBNull.Value)
@@ -247,22 +247,51 @@ namespace MensajeriaCallejeros
                     else
                     {
                         id_reg = Convert.ToDecimal(row[0]);
+                        id_reg2 = Convert.ToDecimal(row[0]);
                     }
                 }
-
                 id_reg = id_reg + 1;
                 dt.Rows.Clear();
-                conexion.Close();
             }
             catch (Exception er)
             {
                 MessageBox.Show(er.Message.ToString(), "Error");
+                return;
             }
             /*Logica de Inserción */
             decimal importe = 0;
             decimal resto = 0;
             int compensa = 0;
             int tip_pago = 0;
+
+            try
+            {
+                conexion.Open();
+                sentencia = "select sdo_restante from TB_CADET_REG_PAGO where id_reg_pg = '" + id_reg2 + "'";
+                FbCommand cmd = new FbCommand(sentencia, conexion);
+                FbDataReader fb_datareader = cmd.ExecuteReader();
+                DataTable dt = new DataTable();
+                dt.Load(fb_datareader);
+                cmd = null;
+                conexion.Close();
+                foreach (DataRow row in dt.Rows)
+                {
+                    if (row[0] == null)
+                    {
+                        resto = importe_cadete;
+                    }
+                    else
+                    {
+                        resto = Convert.ToDecimal(row[0]);
+                    }
+                    
+                }
+                dt.Rows.Clear();
+            }
+            catch (Exception er)
+            {
+                MessageBox.Show(er.Message.ToString(), "Error");
+            }
 
             if (textBox1.Text != "0")
             {
@@ -284,13 +313,13 @@ namespace MensajeriaCallejeros
                 compensa = 1;
                 tip_pago = 0; //Pago compensado por Admin/Usuario
 
-                resto = importe_cadete - importe;
+                resto = resto - importe;
                 importe = resto;
                 resto = 0;
             }
             else
             {
-                resto = importe_cadete - importe;
+                resto = resto - importe;
                 compensa = 0;
                 if(resto == 0)
                 {
