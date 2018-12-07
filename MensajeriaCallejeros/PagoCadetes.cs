@@ -77,7 +77,7 @@ namespace MensajeriaCallejeros
             conexion.ConnectionString = Convert.ToString(Conexion_BD.Recuperar_cadena());
             try
             {
-                importe = 0;
+                importe = 0; 
 
                 if (textBox1.Text != "0")
                 {
