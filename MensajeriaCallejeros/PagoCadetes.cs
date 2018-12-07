@@ -79,6 +79,7 @@ namespace MensajeriaCallejeros
             catch (Exception er)
             {
                 MessageBox.Show(er.Message.ToString(), "Error");
+                return;
             }
             
         }
@@ -100,6 +101,7 @@ namespace MensajeriaCallejeros
             catch (Exception er)
             {
                 MessageBox.Show(er.Message.ToString(), "Error");
+                return;
             }
         }
 
@@ -124,6 +126,7 @@ namespace MensajeriaCallejeros
             catch (Exception er)
             {
                 MessageBox.Show(er.Message.ToString(), "Error");
+                return;
             }
         }
 
@@ -161,6 +164,7 @@ namespace MensajeriaCallejeros
             catch (Exception er)
             {
                 MessageBox.Show(er.Message.ToString(), "Error");
+                return;
             }
         }
 
@@ -219,6 +223,7 @@ namespace MensajeriaCallejeros
             catch (Exception er)
             {
                 MessageBox.Show(er.Message.ToString(), "Error");
+                return;
             }
         }
 
@@ -291,6 +296,7 @@ namespace MensajeriaCallejeros
             catch (Exception er)
             {
                 MessageBox.Show(er.Message.ToString(), "Error");
+                return;
             }
 
             if (textBox1.Text != "0")
@@ -348,6 +354,7 @@ namespace MensajeriaCallejeros
             catch (Exception er)
             {
                 MessageBox.Show(er.Message.ToString(), "Error");
+                return;
             }
         }
     }
