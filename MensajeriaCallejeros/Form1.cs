@@ -40,5 +40,11 @@ namespace MensajeriaCallejeros
         {
 
         }
+
+        private void pagoCadetesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Config_PCadetes CPC = new Config_PCadetes();
+            CPC.ShowDialog();
+        }
     }
 }

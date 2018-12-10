@@ -32,9 +32,9 @@
             this.administraciónToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.administraciónDeClientesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.administraciónDeCadetesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.button1 = new System.Windows.Forms.Button();
             this.configuraciónToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pagoCadetesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.button1 = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -72,16 +72,6 @@
             this.administraciónDeCadetesToolStripMenuItem.Text = "Cadetes";
             this.administraciónDeCadetesToolStripMenuItem.Click += new System.EventHandler(this.administraciónDeCadetesToolStripMenuItem_Click);
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(694, 408);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "Salir";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
             // configuraciónToolStripMenuItem
             // 
             this.configuraciónToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -95,6 +85,17 @@
             this.pagoCadetesToolStripMenuItem.Name = "pagoCadetesToolStripMenuItem";
             this.pagoCadetesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.pagoCadetesToolStripMenuItem.Text = "Pago Cadetes";
+            this.pagoCadetesToolStripMenuItem.Click += new System.EventHandler(this.pagoCadetesToolStripMenuItem_Click);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(694, 408);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 1;
+            this.button1.Text = "Salir";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // Form1
             // 

@@ -18,8 +18,11 @@ namespace MensajeriaCallejeros
         string sentencia;
         public string nombre;
         public decimal id;
+        DateTime fecha;
         decimal importe_cadete = 0;
+        decimal importe_normal = 0;
         decimal importe_interes = 0;
+        int marca_deuda = 0;
         public PagoCadetes()
         {
             InitializeComponent();
@@ -30,7 +33,6 @@ namespace MensajeriaCallejeros
             // Fecha seleccionada en el control DataTimePicker
             conexion.ConnectionString = Convert.ToString(Conexion_BD.Recuperar_cadena());
             //Recupera clientes
-            recupera_config();
             try
             {
                 sentencia = "select count(*) from tb_cadete_pago where id_cadet = '" + id + "'";
@@ -45,6 +47,7 @@ namespace MensajeriaCallejeros
                     if (Convert.ToInt16(row[0]) == 0)
                     {
                         bandera = "PP";
+                        recupera_config();
                     }
                     else
                     {
@@ -58,18 +61,18 @@ namespace MensajeriaCallejeros
                         conexion.Close();
                         foreach (DataRow row1 in dt1.Rows)
                         {
-                            DateTime fecha = Convert.ToDateTime(row1[0]);
+                            fecha = Convert.ToDateTime(row1[0]);
                             if (fecha == DateTime.Today)
                             {
                                 fecha = DateTime.Today;
                                 dateTimePicker2.Value = fecha.AddDays(7);
                                 actualizar_fecysdo();
                             }
-                            else
-                            {
-                                dateTimePicker2.Value = fecha.AddDays(7); ;
+                            else {
+                                dateTimePicker2.Value = fecha;
                             }
-                            
+                            traer_mon_tot_cadet();
+                            importe_cadete = importe_normal;
                         }
                     }
                 }
@@ -79,20 +82,51 @@ namespace MensajeriaCallejeros
             catch (Exception er)
             {
                 MessageBox.Show(er.Message.ToString(), "Error");
-                return;
             }
             
         }
-        private void actualizar_fecysdo()
+
+        private void traer_mon_tot_cadet()
         {
             conexion.ConnectionString = Convert.ToString(Conexion_BD.Recuperar_cadena());
-            recupera_config();
+            //Recupera clientes
             try
             {
+                sentencia = "select monto_tot,marca_deuda from tb_cadete_pago where id_cadet = '" + id + "'";
+                conexion.Open();
+                FbCommand cmd = new FbCommand(sentencia, conexion);
+                FbDataReader fb_datareader = cmd.ExecuteReader();
+                DataTable dt = new DataTable();
+                dt.Load(fb_datareader);
+                conexion.Close();
+                foreach (DataRow row in dt.Rows)
+                {
+                    importe_normal = Convert.ToDecimal(row[0]);
+                    marca_deuda = Convert.ToInt16(row[1]);
+                }
+            }
+            catch (Exception er)
+            {
+                MessageBox.Show(er.Message.ToString(), "Error");
+            }
+        }
+
+            private void actualizar_fecysdo()
+            {
+            conexion.ConnectionString = Convert.ToString(Conexion_BD.Recuperar_cadena());
+            recupera_config();
+            traer_mon_tot_cadet();
+            try
+            {
+                if (importe_normal != 0) {
+                    importe_cadete = importe_cadete + importe_normal;
+                    marca_deuda = 1;
+                }
+
                 conexion.Open();
                 sentencia = "update tb_cadete_pago " +
                             "set fecha_venc = '" + String.Format("{0:yyyy-MM-dd}", dateTimePicker2.Value) + "' ," +
-                            "monto_tot = '" + importe_cadete  + "'  where id_cadet = '" + id + "'";
+                            "monto_tot = '" + importe_cadete  + "', marca_deuda = '" + marca_deuda + "'  where id_cadet = '" + id + "'";
                 FbCommand cmd = new FbCommand(sentencia, conexion);
                 cmd.ExecuteNonQuery();
                 cmd = null;
@@ -101,7 +135,6 @@ namespace MensajeriaCallejeros
             catch (Exception er)
             {
                 MessageBox.Show(er.Message.ToString(), "Error");
-                return;
             }
         }
 
@@ -126,7 +159,6 @@ namespace MensajeriaCallejeros
             catch (Exception er)
             {
                 MessageBox.Show(er.Message.ToString(), "Error");
-                return;
             }
         }
 
@@ -136,26 +168,29 @@ namespace MensajeriaCallejeros
             conexion.ConnectionString = Convert.ToString(Conexion_BD.Recuperar_cadena());
             try
             {
-                importe = 0; 
+                importe = 0;
 
-                if (textBox1.Text != "0")
+                if ((Convert.ToDecimal(textBox2.Text)) != 0)
                 {
                     importe = Convert.ToDecimal(textBox2.Text);
                 }
 
-                if (textBox2.Text != "0")
+                if ((Convert.ToDecimal(textBox3.Text)) != 0)
                 {
                     importe = Convert.ToDecimal(textBox3.Text);
                 }
 
-                if (textBox3.Text != "0")
+                if ((Convert.ToDecimal(textBox4.Text)) != 0)
                 {
                     importe = Convert.ToDecimal(textBox4.Text);
                 }
 
+                fecha = dateTimePicker1.Value;
+                dateTimePicker2.Value = fecha.AddDays(7);
+
                 conexion.Open();
-                sentencia = "insert into tb_cadete_pago (id_cadet,ultimo_pago,pago_actual,fecha_pago,fecha_venc,monto_tot) " +
-                    "values ('" + id + "',0,'" + importe + "','" + String.Format("{0:yyyy-MM-dd}", dateTimePicker1.Value)  + "','" + String.Format("{0:yyyy-MM-dd}", dateTimePicker2.Value) + "','" + importe_cadete +"')";
+                sentencia = "insert into tb_cadete_pago (id_cadet,ultimo_pago,pago_actual,fecha_pago,fecha_venc,monto_tot,marca_deuda) " +
+                    "values ('" + id + "',0,'" + importe + "','" + String.Format("{0:yyyy-MM-dd}", dateTimePicker1.Value)  + "','" + String.Format("{0:yyyy-MM-dd}", dateTimePicker2.Value) + "','" + importe_cadete +"','" + marca_deuda + "')";
                 FbCommand cmd = new FbCommand(sentencia, conexion);
                 cmd.ExecuteNonQuery();
                 cmd = null;
@@ -164,7 +199,6 @@ namespace MensajeriaCallejeros
             catch (Exception er)
             {
                 MessageBox.Show(er.Message.ToString(), "Error");
-                return;
             }
         }
 
@@ -177,13 +211,13 @@ namespace MensajeriaCallejeros
         {
             if (bandera == "PP")
             {
-                inserta_fila();
                 inserta_regpag();
+                inserta_fila();
             }
             else
             {
-                actualiza_cadet_pag();
                 inserta_regpag();
+                actualiza_cadet_pag();
             }
         }
 
@@ -194,17 +228,17 @@ namespace MensajeriaCallejeros
             {
                 importe = 0;
 
-                if (textBox1.Text != "0")
+                if ((Convert.ToDecimal(textBox2.Text)) != 0)
                 {
                     importe = Convert.ToDecimal(textBox2.Text);
                 }
 
-                if (textBox2.Text != "0")
+                if ((Convert.ToDecimal(textBox3.Text)) != 0)
                 {
                     importe = Convert.ToDecimal(textBox3.Text);
                 }
 
-                if (textBox3.Text != "0")
+                if ((Convert.ToDecimal(textBox4.Text)) != 0)
                 {
                     importe = Convert.ToDecimal(textBox4.Text);
                 }
@@ -213,8 +247,8 @@ namespace MensajeriaCallejeros
                 sentencia = "update tb_cadete_pago " +
                             "set ultimo_pago = pago_actual ," +
                             "pago_actual = '" + importe + "' ," +
-                            "fecha_pago = '" + String.Format("{0:yyyy-MM-dd}", dateTimePicker1.Value) + "' " +
-                            "where id_cadet = '" + id + "'";
+                            "fecha_pago = '" + String.Format("{0:yyyy-MM-dd}", dateTimePicker1.Value) + "', " +
+                            " marca_deuda = '" + marca_deuda + "' where id_cadet = '" + id + "'";
                 FbCommand cmd = new FbCommand(sentencia, conexion);
                 cmd.ExecuteNonQuery();
                 cmd = null;
@@ -223,7 +257,6 @@ namespace MensajeriaCallejeros
             catch (Exception er)
             {
                 MessageBox.Show(er.Message.ToString(), "Error");
-                return;
             }
         }
 
@@ -252,7 +285,6 @@ namespace MensajeriaCallejeros
                     else
                     {
                         id_reg = Convert.ToDecimal(row[0]);
-                        id_reg2 = Convert.ToDecimal(row[0]);
                     }
                 }
                 id_reg = id_reg + 1;
@@ -269,10 +301,11 @@ namespace MensajeriaCallejeros
             int compensa = 0;
             int tip_pago = 0;
 
+
             try
             {
                 conexion.Open();
-                sentencia = "select sdo_restante from TB_CADET_REG_PAGO where id_reg_pg = '" + id_reg2 + "'";
+                sentencia = "select max(id_reg_pg) from TB_CADET_REG_PAGO where id_cadet = '"+ id + "'";
                 FbCommand cmd = new FbCommand(sentencia, conexion);
                 FbDataReader fb_datareader = cmd.ExecuteReader();
                 DataTable dt = new DataTable();
@@ -281,15 +314,14 @@ namespace MensajeriaCallejeros
                 conexion.Close();
                 foreach (DataRow row in dt.Rows)
                 {
-                    if (row[0] == null)
+                    if (row[0] == DBNull.Value)
                     {
-                        resto = importe_cadete;
+                        id_reg2 = 0;
                     }
                     else
                     {
-                        resto = Convert.ToDecimal(row[0]);
+                        id_reg2 = Convert.ToDecimal(row[0]);
                     }
-                    
                 }
                 dt.Rows.Clear();
             }
@@ -299,17 +331,46 @@ namespace MensajeriaCallejeros
                 return;
             }
 
-            if (textBox1.Text != "0")
+
+
+            try
+            {
+                sentencia = "select count(*) from TB_CADET_REG_PAGO where id_reg_pg = '" + id_reg2 + "'";
+                conexion.Open();
+                FbCommand cmd = new FbCommand(sentencia, conexion);
+                FbDataReader fb_datareader = cmd.ExecuteReader();
+                DataTable dt = new DataTable();
+                dt.Load(fb_datareader);
+                conexion.Close();
+                foreach (DataRow row in dt.Rows)
+                {
+                    if (Convert.ToInt16(row[0]) == 0)
+                    {
+                        resto = importe_cadete;
+                    }
+                    else {
+                        resto = Busca_resto(id_reg2,conexion,sentencia,importe_cadete,resto);
+                    }
+                }
+                dt.Rows.Clear();
+
+            }
+            catch (Exception er)
+            {
+                MessageBox.Show(er.Message.ToString(), "Error");
+            }
+
+            if ((Convert.ToDecimal(textBox2.Text)) != 0)
             {
                 importe = Convert.ToDecimal(textBox2.Text);
             }
 
-            if (textBox2.Text != "0")
+            if ((Convert.ToDecimal(textBox3.Text)) != 0)
             {
                 importe = Convert.ToDecimal(textBox3.Text);
             }
 
-            if (textBox3.Text != "0")
+            if ((Convert.ToDecimal(textBox4.Text)) != 0)
             {
                 importe = Convert.ToDecimal(textBox4.Text);
             }
@@ -329,7 +390,18 @@ namespace MensajeriaCallejeros
                 compensa = 0;
                 if(resto == 0)
                 {
-                    tip_pago = 1; //Pago Completado
+                    marca_deuda = 0;
+                    //Pago Completado
+                    tip_pago = 1;
+                    if (resto < 0)
+                    {
+                        if (MessageBox.Show("El Cadete realiza un pago que dejara saldo a su favor. ¿Desea continuar con la Operación? ", "Atención", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == System.Windows.Forms.DialogResult.No) {
+                            return;
+                        }
+                    }
+                    else {
+                        MessageBox.Show("El Cadete completo el Pago semanal", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                 }
                 else
                 {
@@ -354,7 +426,39 @@ namespace MensajeriaCallejeros
             catch (Exception er)
             {
                 MessageBox.Show(er.Message.ToString(), "Error");
-                return;
+            }
+        }
+        private static  decimal Busca_resto(decimal id_reg2,FbConnection conexion,string sentencia,decimal importe_cadete,decimal resto)
+        {
+            conexion.ConnectionString = Convert.ToString(Conexion_BD.Recuperar_cadena());
+            try
+            {
+                conexion.Open();
+                sentencia = "select sdo_restante from TB_CADET_REG_PAGO where id_reg_pg = '" + id_reg2 + "'";
+                FbCommand cmd = new FbCommand(sentencia, conexion);
+                FbDataReader fb_datareader = cmd.ExecuteReader();
+                DataTable dt = new DataTable();
+                dt.Load(fb_datareader);
+                cmd = null;
+                conexion.Close();
+                foreach (DataRow row in dt.Rows)
+                {
+                    if (row[0] == null)
+                    {
+                        resto = Convert.ToDecimal(importe_cadete);
+                    }
+                    else
+                    {
+                        resto = Convert.ToDecimal(row[0]);
+                    }
+                }
+                dt.Rows.Clear();
+                return resto;
+            }
+            catch (Exception er)
+            {
+                MessageBox.Show(er.Message.ToString(), "Error");
+                return -1;
             }
         }
     }
