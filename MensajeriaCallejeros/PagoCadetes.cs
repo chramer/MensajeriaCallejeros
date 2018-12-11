@@ -34,6 +34,7 @@ namespace MensajeriaCallejeros
         {
             // Fecha seleccionada en el control DataTimePicker
             conexion.ConnectionString = Convert.ToString(Conexion_BD.Recuperar_cadena());
+            recupera_config();
             //Recupera clientes
             try
             {
@@ -49,7 +50,6 @@ namespace MensajeriaCallejeros
                     if (Convert.ToInt16(row[0]) == 0)
                     {
                         bandera = "PP";
-                        recupera_config();
                     }
                     else
                     {
@@ -84,6 +84,7 @@ namespace MensajeriaCallejeros
             catch (Exception er)
             {
                 MessageBox.Show(er.Message.ToString(), "Error");
+                return;
             }
             
         }
@@ -110,6 +111,7 @@ namespace MensajeriaCallejeros
             catch (Exception er)
             {
                 MessageBox.Show(er.Message.ToString(), "Error");
+                return;
             }
         }
 
@@ -147,12 +149,20 @@ namespace MensajeriaCallejeros
                 MessageBox.Show(er.Message.ToString(), "Error");
                 return;
             }
+            traer_mon_tot_cadet();
             importe_normal = Busca_resto(id_reg, conexion, sentencia, importe_cadete, 0);
             try
             {
                 if (importe_normal != 0) {
                     importe_cadete = importe_cadete + importe_normal;
-                    marca_deuda = 1;
+                    if (marca_deuda > 1)
+                    {
+                        marca_deuda = marca_deuda + 1;
+                    }
+                    else
+                    {
+                        marca_deuda = 1;
+                    }
                 }
 
                 conexion.Open();
@@ -167,6 +177,7 @@ namespace MensajeriaCallejeros
             catch (Exception er)
             {
                 MessageBox.Show(er.Message.ToString(), "Error");
+                return;
             }
         }
 
@@ -191,6 +202,7 @@ namespace MensajeriaCallejeros
             catch (Exception er)
             {
                 MessageBox.Show(er.Message.ToString(), "Error");
+                return;
             }
         }
 
@@ -231,6 +243,7 @@ namespace MensajeriaCallejeros
             catch (Exception er)
             {
                 MessageBox.Show(er.Message.ToString(), "Error");
+                return;
             }
         }
 
@@ -289,6 +302,7 @@ namespace MensajeriaCallejeros
             catch (Exception er)
             {
                 MessageBox.Show(er.Message.ToString(), "Error");
+                return;
             }
         }
 
@@ -396,21 +410,27 @@ namespace MensajeriaCallejeros
             catch (Exception er)
             {
                 MessageBox.Show(er.Message.ToString(), "Error");
+                return;
             }
+
+            decimal origen = 0;
 
             if ((Convert.ToDecimal(textBox2.Text)) != 0)
             {
-                importe = Convert.ToDecimal(textBox2.Text);
+                importe = importe + Convert.ToDecimal(textBox2.Text);
+                origen = 1; //Pago efectivo
             }
 
             if ((Convert.ToDecimal(textBox3.Text)) != 0)
             {
-                importe = Convert.ToDecimal(textBox3.Text);
+                importe = importe + Convert.ToDecimal(textBox3.Text);
+                origen = 2; //Pago Cupon
             }
 
             if ((Convert.ToDecimal(textBox4.Text)) != 0)
             {
-                importe = Convert.ToDecimal(textBox4.Text);
+                importe = importe + Convert.ToDecimal(textBox4.Text);
+                origen = 3; //Pago CC
             }
 
             if (checkBox1.Checked == true)
@@ -421,6 +441,7 @@ namespace MensajeriaCallejeros
                 resto = resto - importe;
                 importe = resto;
                 resto = 0;
+                origen = 4;
             }
             else
             {
@@ -444,6 +465,7 @@ namespace MensajeriaCallejeros
                 else
                 {
                     tip_pago = 2; //Pago Pago Parcial
+                    resto = resto + importe_interes;
                 }
             }
 
@@ -453,9 +475,9 @@ namespace MensajeriaCallejeros
             try
             {
                 conexion.Open();
-                sentencia = "insert into TB_CADET_REG_PAGO (id_reg_pg,id_cadet,fecpago,fecven,fecreal,fecpro,importe,sdo_total,sdo_restante,tip_pago,compensado,comentario) " +
+                sentencia = "insert into TB_CADET_REG_PAGO (id_reg_pg,id_cadet,fecpago,fecven,fecreal,fecpro,importe,sdo_total,sdo_restante,tip_pago,compensado,comentario,origen_pago) " +
                     "values ('" + id_reg + "','" + id + "','"+ String.Format("{0:yyyy-MM-dd}", dateTimePicker1.Value) + "','" + String.Format("{0:yyyy-MM-dd}", dateTimePicker2.Value) + "'," +
-                    "'" + fecha + "','" + String.Format("{0:yyyy-MM-dd}", DateTime.Today) + "','" + importe + "','" + importe_cadete + "','" + resto + "','" + tip_pago + "','" + compensa + "','" + textBox1.Text + "')";
+                    "'" + fecha + "','" + String.Format("{0:yyyy-MM-dd}", DateTime.Today) + "','" + importe + "','" + importe_cadete + "','" + resto + "','" + tip_pago + "','" + compensa + "','" + textBox1.Text + "','" + origen + "')";
                 FbCommand cmd = new FbCommand(sentencia, conexion);
                 cmd.ExecuteNonQuery();
                 cmd = null;
@@ -464,6 +486,7 @@ namespace MensajeriaCallejeros
             catch (Exception er)
             {
                 MessageBox.Show(er.Message.ToString(), "Error");
+                return;
             }
         }
         private static  decimal Busca_resto(decimal id_reg2,FbConnection conexion,string sentencia,decimal importe_cadete,decimal resto)
@@ -498,6 +521,83 @@ namespace MensajeriaCallejeros
                 MessageBox.Show(er.Message.ToString(), "Error");
                 return -1;
             }
+        }
+        private void Retrive()
+        {
+            conexion.ConnectionString = Convert.ToString(Conexion_BD.Recuperar_cadena());
+            //Recupera clientes
+            try
+            {
+                sentencia = "select * from tb_cadete_pago where id_cadet = '" + id + "'";
+                conexion.Open();
+                FbCommand cmd = new FbCommand(sentencia, conexion);
+                FbDataReader fb_datareader = cmd.ExecuteReader();
+                DataTable dt = new DataTable();
+                dt.Load(fb_datareader);
+                conexion.Close();
+                foreach (DataRow row in dt.Rows)
+                {
+                    
+                }
+            }
+            catch (Exception er)
+            {
+                MessageBox.Show(er.Message.ToString(), "Error");
+                return;
+            }
+
+            decimal id_reg2 = 0;
+            try
+            {
+                conexion.Open();
+                sentencia = "select max(id_reg_pg) from TB_CADET_REG_PAGO where id_cadet = '" + id + "'";
+                FbCommand cmd = new FbCommand(sentencia, conexion);
+                FbDataReader fb_datareader = cmd.ExecuteReader();
+                DataTable dt = new DataTable();
+                dt.Load(fb_datareader);
+                cmd = null;
+                conexion.Close();
+                foreach (DataRow row in dt.Rows)
+                {
+                    if (row[0] == DBNull.Value)
+                    {
+                        id_reg2 = 0;
+                    }
+                    else
+                    {
+                        id_reg2 = Convert.ToDecimal(row[0]);
+                    }
+                }
+                dt.Rows.Clear();
+            }
+            catch (Exception er)
+            {
+                MessageBox.Show(er.Message.ToString(), "Error");
+                return;
+            }
+
+            try
+            {
+                conexion.Open();
+                sentencia = "select * from TB_CADET_REG_PAGO where id_reg_pg = '" + id_reg2 + "'";
+                FbCommand cmd = new FbCommand(sentencia, conexion);
+                FbDataReader fb_datareader = cmd.ExecuteReader();
+                DataTable dt = new DataTable();
+                dt.Load(fb_datareader);
+                cmd = null;
+                conexion.Close();
+                foreach (DataRow row in dt.Rows)
+                {
+                    
+                }
+                dt.Rows.Clear();
+            }
+            catch (Exception er)
+            {
+                MessageBox.Show(er.Message.ToString(), "Error");
+                return;
+            }
+
         }
     }
 }
