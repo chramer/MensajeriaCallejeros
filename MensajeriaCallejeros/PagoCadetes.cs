@@ -86,7 +86,7 @@ namespace MensajeriaCallejeros
                 MessageBox.Show(er.Message.ToString(), "Error");
                 return;
             }
-            
+            Retrive();
         }
 
         private void traer_mon_tot_cadet()
@@ -526,9 +526,10 @@ namespace MensajeriaCallejeros
         {
             conexion.ConnectionString = Convert.ToString(Conexion_BD.Recuperar_cadena());
             //Recupera clientes
+            decimal marca_deuda = 0;
             try
             {
-                sentencia = "select * from tb_cadete_pago where id_cadet = '" + id + "'";
+                sentencia = "select pago_actual,fecha_pago,marca_deuda from tb_cadete_pago where id_cadet = '" + id + "'";
                 conexion.Open();
                 FbCommand cmd = new FbCommand(sentencia, conexion);
                 FbDataReader fb_datareader = cmd.ExecuteReader();
@@ -537,8 +538,17 @@ namespace MensajeriaCallejeros
                 conexion.Close();
                 foreach (DataRow row in dt.Rows)
                 {
-                    
+                        label18.Text = Convert.ToString(row[0]);
+                        label15.Text = Convert.ToString(row[1]);
+                        marca_deuda = Convert.ToDecimal(row[2]);
                 }
+                if (dt.Rows.Count == 0)
+                {
+                    label18.Text = "Sin datos";
+                    label15.Text = "Sin datos";
+                    marca_deuda = 9;
+                }
+                dt.Rows.Clear();
             }
             catch (Exception er)
             {
@@ -547,6 +557,9 @@ namespace MensajeriaCallejeros
             }
 
             decimal id_reg2 = 0;
+            decimal sdo_total = 0;
+            decimal origen_pago = 0;
+            decimal tipo_pago = 0;
             try
             {
                 conexion.Open();
@@ -562,6 +575,7 @@ namespace MensajeriaCallejeros
                     if (row[0] == DBNull.Value)
                     {
                         id_reg2 = 0;
+
                     }
                     else
                     {
@@ -579,7 +593,7 @@ namespace MensajeriaCallejeros
             try
             {
                 conexion.Open();
-                sentencia = "select * from TB_CADET_REG_PAGO where id_reg_pg = '" + id_reg2 + "'";
+                sentencia = "select origen_pago,sdo_restante,tip_pago from TB_CADET_REG_PAGO where id_reg_pg = '" + id_reg2 + "'";
                 FbCommand cmd = new FbCommand(sentencia, conexion);
                 FbDataReader fb_datareader = cmd.ExecuteReader();
                 DataTable dt = new DataTable();
@@ -588,7 +602,15 @@ namespace MensajeriaCallejeros
                 conexion.Close();
                 foreach (DataRow row in dt.Rows)
                 {
-                    
+                    label12.Text = Convert.ToString(row[1]);
+                    origen_pago = Convert.ToDecimal(row[0]);
+                    tipo_pago = Convert.ToDecimal(row[2]);
+                }
+                if (dt.Rows.Count == 0)
+                {
+                    label12.Text = "Sin Datos";
+                    origen_pago = 9;
+                    tipo_pago = 9;
                 }
                 dt.Rows.Clear();
             }
@@ -598,6 +620,64 @@ namespace MensajeriaCallejeros
                 return;
             }
 
+            if(marca_deuda == 0 && tipo_pago == 1)
+            {
+                label10.Text = "Al día";
+                label10.ForeColor = Color.Green;
+            }
+            else
+            {
+                if (marca_deuda == 0 && tipo_pago == 2)
+                {
+                    label10.Text = "Al día,con Pago Parcial";
+                    label10.ForeColor = Color.Green;
+                }
+                else
+                {
+                    if (marca_deuda == 0 && tipo_pago == 0)
+                    {
+                        label10.Text = "Al día,Conpensado por Usuario";
+                        label10.ForeColor = Color.Green;
+                    }
+                }
+            }
+
+            if (marca_deuda == 1)
+            {
+                label10.Text = "Con Atraso Moderado";
+                label10.ForeColor = Color.Orange;
+            }
+
+            if (marca_deuda > 1)
+            {
+                label10.Text = "Con Atraso Riesgoso";
+                label10.ForeColor = Color.Red;
+            }
+
+            if (origen_pago == 1)
+            {
+                label20.Text = "Efectivo";
+            }
+
+            if (origen_pago == 2)
+            {
+                label20.Text = "Cupones";
+            }
+
+            if (origen_pago == 3)
+            {
+                label20.Text = "Cuenta Corriente";
+            }
+
+            if (marca_deuda == 9)
+            {
+                label10.Text = "Sin Datos, Cadete Nuevo";
+                label10.ForeColor = Color.Black;
+            }
+            if (origen_pago  == 9)
+            {
+                label20.Text = "Sin Datos";
+            }
         }
     }
 }
