@@ -23,6 +23,8 @@ namespace MensajeriaCallejeros
         decimal importe_normal = 0;
         decimal importe_interes = 0;
         int marca_deuda = 0;
+        int bandera_denewsemana = 0;
+
         public PagoCadetes()
         {
             InitializeComponent();
@@ -113,9 +115,39 @@ namespace MensajeriaCallejeros
 
             private void actualizar_fecysdo()
             {
+            bandera_denewsemana = 1;
             conexion.ConnectionString = Convert.ToString(Conexion_BD.Recuperar_cadena());
             recupera_config();
-            traer_mon_tot_cadet();
+            decimal id_reg = 0;
+            try
+            {
+                conexion.Open();
+                sentencia = "select max(id_reg_pg) from TB_CADET_REG_PAGO where id_cadet = '" + id + "'";
+                FbCommand cmd = new FbCommand(sentencia, conexion);
+                FbDataReader fb_datareader = cmd.ExecuteReader();
+                DataTable dt = new DataTable();
+                dt.Load(fb_datareader);
+                cmd = null;
+                conexion.Close();
+                foreach (DataRow row in dt.Rows)
+                {
+                    if (row[0] == DBNull.Value)
+                    {
+                        id_reg = 0;
+                    }
+                    else
+                    {
+                        id_reg = Convert.ToDecimal(row[0]);
+                    }
+                }
+                dt.Rows.Clear();
+            }
+            catch (Exception er)
+            {
+                MessageBox.Show(er.Message.ToString(), "Error");
+                return;
+            }
+            importe_normal = Busca_resto(id_reg, conexion, sentencia, importe_cadete, 0);
             try
             {
                 if (importe_normal != 0) {
@@ -331,8 +363,6 @@ namespace MensajeriaCallejeros
                 return;
             }
 
-
-
             try
             {
                 sentencia = "select count(*) from TB_CADET_REG_PAGO where id_reg_pg = '" + id_reg2 + "'";
@@ -344,12 +374,20 @@ namespace MensajeriaCallejeros
                 conexion.Close();
                 foreach (DataRow row in dt.Rows)
                 {
-                    if (Convert.ToInt16(row[0]) == 0)
+                    if (bandera_denewsemana == 1)
                     {
                         resto = importe_cadete;
                     }
-                    else {
-                        resto = Busca_resto(id_reg2,conexion,sentencia,importe_cadete,resto);
+                    else
+                    {
+                        if (Convert.ToInt16(row[0]) == 0)
+                        {
+                            resto = importe_cadete;
+                        }
+                        else
+                        {
+                            resto = Busca_resto(id_reg2, conexion, sentencia, importe_cadete, resto);
+                        }
                     }
                 }
                 dt.Rows.Clear();
