@@ -64,17 +64,24 @@ namespace MensajeriaCallejeros
                         foreach (DataRow row1 in dt1.Rows)
                         {
                             fecha = Convert.ToDateTime(row1[0]);
-                            if (fecha == DateTime.Today)
+                            
+                            if (fecha <= DateTime.Today)
                             {
-                                fecha = DateTime.Today;
-                                dateTimePicker2.Value = fecha.AddDays(7);
-                                actualizar_fecysdo();
+                                while (fecha < DateTime.Today)
+                                {
+                                    // fecha = DateTime.Today;
+                                    fecha = fecha.AddDays(7);
+                                    //dateTimePicker2.Value = fecha.AddDays(7);
+                                    actualizar_fecysdo();
+                                }
+                                dateTimePicker2.Value = fecha;
                             }
                             else {
                                 dateTimePicker2.Value = fecha;
                             }
                             traer_mon_tot_cadet();
                             importe_cadete = importe_normal;
+                            
                         }
                     }
                 }
@@ -447,7 +454,7 @@ namespace MensajeriaCallejeros
             {
                 resto = resto - importe;
                 compensa = 0;
-                if(resto == 0)
+                if(resto <= 0)
                 {
                     marca_deuda = 0;
                     //Pago Completado
@@ -488,6 +495,7 @@ namespace MensajeriaCallejeros
                 MessageBox.Show(er.Message.ToString(), "Error");
                 return;
             }
+            Retrive();
         }
         private static  decimal Busca_resto(decimal id_reg2,FbConnection conexion,string sentencia,decimal importe_cadete,decimal resto)
         {
@@ -529,7 +537,7 @@ namespace MensajeriaCallejeros
             decimal marca_deuda = 0;
             try
             {
-                sentencia = "select pago_actual,fecha_pago,marca_deuda from tb_cadete_pago where id_cadet = '" + id + "'";
+                sentencia = "select pago_actual,marca_deuda from tb_cadete_pago where id_cadet = '" + id + "'";
                 conexion.Open();
                 FbCommand cmd = new FbCommand(sentencia, conexion);
                 FbDataReader fb_datareader = cmd.ExecuteReader();
@@ -539,8 +547,7 @@ namespace MensajeriaCallejeros
                 foreach (DataRow row in dt.Rows)
                 {
                         label18.Text = Convert.ToString(row[0]);
-                        label15.Text = Convert.ToString(row[1]);
-                        marca_deuda = Convert.ToDecimal(row[2]);
+                        marca_deuda = Convert.ToDecimal(row[1]);
                 }
                 if (dt.Rows.Count == 0)
                 {
@@ -593,7 +600,7 @@ namespace MensajeriaCallejeros
             try
             {
                 conexion.Open();
-                sentencia = "select origen_pago,sdo_restante,tip_pago from TB_CADET_REG_PAGO where id_reg_pg = '" + id_reg2 + "'";
+                sentencia = "select origen_pago,sdo_restante,tip_pago,fecreal from TB_CADET_REG_PAGO where id_reg_pg = '" + id_reg2 + "'";
                 FbCommand cmd = new FbCommand(sentencia, conexion);
                 FbDataReader fb_datareader = cmd.ExecuteReader();
                 DataTable dt = new DataTable();
@@ -605,6 +612,10 @@ namespace MensajeriaCallejeros
                     label12.Text = Convert.ToString(row[1]);
                     origen_pago = Convert.ToDecimal(row[0]);
                     tipo_pago = Convert.ToDecimal(row[2]);
+
+                    string fecha = Convert.ToDateTime(row[3]).ToString("yyyy-MM-dd");
+                    string tiempo = Convert.ToDateTime(row[3]).ToString("HH:mm:ss");
+                    label15.Text = fecha + " " + tiempo;
                 }
                 if (dt.Rows.Count == 0)
                 {
@@ -620,38 +631,69 @@ namespace MensajeriaCallejeros
                 return;
             }
 
-            if(marca_deuda == 0 && tipo_pago == 1)
+
+            try
             {
-                label10.Text = "Al día";
-                label10.ForeColor = Color.Green;
+                conexion.Open();
+                sentencia = "select sum(importe) from TB_CADET_REG_PAGO where id_cadet = '" + id + "'";
+                FbCommand cmd = new FbCommand(sentencia, conexion);
+                FbDataReader fb_datareader = cmd.ExecuteReader();
+                DataTable dt = new DataTable();
+                dt.Load(fb_datareader);
+                cmd = null;
+                conexion.Close();
+                foreach (DataRow row in dt.Rows)
+                {
+                    if (row[0] == DBNull.Value)
+                    {
+                        sdo_total = 0;
+
+                    }
+                    else
+                    {
+                        sdo_total = Convert.ToDecimal(row[0]);
+                    }
+                }
+                dt.Rows.Clear();
+            }
+            catch (Exception er)
+            {
+                MessageBox.Show(er.Message.ToString(), "Error");
+                return;
+            }
+
+            if (marca_deuda == 0 && tipo_pago == 1)
+            {
+                textBox5.Text = "Al día";
+                textBox5.ForeColor = Color.Green;
             }
             else
             {
                 if (marca_deuda == 0 && tipo_pago == 2)
                 {
-                    label10.Text = "Al día,con Pago Parcial";
-                    label10.ForeColor = Color.Green;
+                    textBox5.Text = "Al día,con Pago Parcial";
+                    textBox5.ForeColor = Color.Green;
                 }
                 else
                 {
                     if (marca_deuda == 0 && tipo_pago == 0)
                     {
-                        label10.Text = "Al día,Conpensado por Usuario";
-                        label10.ForeColor = Color.Green;
+                        textBox5.Text = "Al día,Conpensado por Usuario";
+                        textBox5.ForeColor = Color.Green;
                     }
                 }
             }
 
             if (marca_deuda == 1)
             {
-                label10.Text = "Con Atraso Moderado";
-                label10.ForeColor = Color.Orange;
+                textBox5.Text = "Con Atraso Moderado";
+                textBox5.ForeColor = Color.Orange;
             }
 
             if (marca_deuda > 1)
             {
-                label10.Text = "Con Atraso Riesgoso";
-                label10.ForeColor = Color.Red;
+                textBox5.Text = "Con Atraso Riesgoso";
+                textBox5.ForeColor = Color.Red;
             }
 
             if (origen_pago == 1)
@@ -671,13 +713,16 @@ namespace MensajeriaCallejeros
 
             if (marca_deuda == 9)
             {
-                label10.Text = "Sin Datos, Cadete Nuevo";
-                label10.ForeColor = Color.Black;
+                textBox5.Text = "Sin Datos, Cadete Nuevo";
+                textBox5.ForeColor = Color.Black;
             }
             if (origen_pago  == 9)
             {
                 label20.Text = "Sin Datos";
             }
+
+            label29.Text = Convert.ToString(sdo_total);
         }
+
     }
 }
